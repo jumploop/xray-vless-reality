@@ -15,6 +15,7 @@ green() { echo -e "\033[32m\033[01m$1\033[0m"; }
 yellow() { echo -e "\033[33m\033[01m$1\033[0m"; }
 blue() { echo -e "\033[36m\033[01m$1\033[0m"; }
 white() { echo -e "\033[37m\033[01m$1\033[0m"; }
+readp() { read -p "$(yellow "$1")" $2; }
 
 error() {
 	echo -e "\n$red 输入错误! $none\n"
