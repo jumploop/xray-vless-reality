@@ -181,11 +181,28 @@ fi
 
 tgsbshow() {
 	echo
-	yellow "1：重置/设置Telegram机器人的Token、用户ID"
-	readp "输入Telegram机器人Token: " token
-	telegram_token=$token
-	readp "输入Telegram机器人用户ID: " userid
-	telegram_id=$userid
+	tgconf="/etc/s-box/tg.conf"
+	if [[ (-z $telegram_token || -z $telegram_id) && -f $tgconf ]]; then
+		source "$tgconf"
+	fi
+	if [[ -n $telegram_token && -n $telegram_id ]]; then
+		green "检测到 telegram_token / telegram_id，直接使用"
+	else
+		yellow "1：重置/设置Telegram机器人的Token、用户ID"
+		if [[ -z $telegram_token ]]; then
+			readp "输入Telegram机器人Token: " token
+			telegram_token=$token
+		fi
+		if [[ -z $telegram_id ]]; then
+			readp "输入Telegram机器人用户ID: " userid
+			telegram_id=$userid
+		fi
+		mkdir -p /etc/s-box
+		cat >"$tgconf" <<EOF
+telegram_token=$telegram_token
+telegram_id=$telegram_id
+EOF
+	fi
 	echo '#!/bin/bash
 export LANG=en_US.UTF-8
 
